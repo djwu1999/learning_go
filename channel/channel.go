@@ -1,17 +1,46 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"time"
+)
 
-func chanDemo() {
+func createWorker (id int) chan<- int{
 	c := make(chan int)
 	go func() {
 		for {
-			n := <-c
-			fmt.Println(n)
+			fmt.Printf("Worker %d received %c\n",
+				id, <-c)
 		}
-	} ()
+	}()
+	return c
+}
+
+
+func chanDemo() {
+	var channels [10]chan<- int
+	for i := 0; i < 10; i++ {
+		channels[i] = createWorker(i)
+	}
+
+	for i := 0; i < 10; i++ {
+		channels[i] <- 'a' + i
+	}
+
+	for i := 0; i < 10; i++ {
+		channels[i] <- 'A' + i
+	}
+
+	for i := 0; i < 10; i++ {
+		channels[i] <- 'a' + i
+	}
+	time.Sleep(time.Millisecond)
+}
+
+func bufferedChannel() {
+	c := make(chan int)
+
 	c <- 1
-	c <- 2
 }
 
 func main() {

@@ -44,5 +44,5 @@ func bufferedChannel() {
 }
 
 func main() {
-	chanDemo()
+
 }
